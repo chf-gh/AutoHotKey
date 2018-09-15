@@ -38,8 +38,7 @@ $p::`;
 	Gui, Add, ListView,AltSubmit r30   x0 y0 gMyListView vListView   SortDesc c222222 Grid ,  Name|create_date
 	Gui, Add, Text, w400 x+2 r1 , 内容:
 	Gui, Add, Edit, w700 y+2 r34 vItemContent , 未选择行
-	Gui, Add, Button, w100 x+-100 y+4 , Update    ; ButtonUpdate(如果存在)会在此按钮被按下时运行.
-	Gui, Add, Button, w100 x+-600 y+-22 , Delete     
+	Gui, Add, Button, w100 x+-100 y+4 , Update    ; ButtonUpdate(如果存在)会在此按钮被按下时运行. 
 	Gui, +Resize  ; 让用户可以调整窗口的大小. 
 	Gui, Font, s10 cBlack , Verdana  ; 如果需要, 使用这样的一行给窗口设置新的默认字体.
     GuiControl, Font, ItemContent  ; 让上面的字体设置对控件生效.
@@ -124,31 +123,7 @@ $p::`;
 			MsgBox,0,,无内容   
 			return  
 		}		
-	return 
-	ButtonDelete: 
-		if("" != RowText){ 
-			MsgBox,292,,确定删除: %RowText% 这个卡片吗？    
-			IfMsgBox No
-				return 
-			GuiControlGet, ItemContent  ; 获取编辑控件的内容. 
-			FileDelete, %addr%\%RowText% 			  
-			RowNumber = 0   
-			Loop
-			{
-				RowNumber := LV_GetNext(RowNumber - 1)  ; 在前一次找到的位置后继续搜索.
-				if not RowNumber  ; 上面返回零, 所以选择的行已经都找到了.
-					break
-				LV_Delete(  RowNumber) 
-			}
-			preNum = 0 ;切换标题前的标题行号
-			preText = "" ;切换标题前的标题 
-			ToolTip ,删除成功 
-			SetTimer, RemoveToolTip, 1000  
-		}else{
-			MsgBox,0,,无内容   
-			return  
-		}		
-	return    			
+	return      			
 return	
 	
 ; 保存小卡片
