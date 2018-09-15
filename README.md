@@ -74,7 +74,7 @@ AutoHotKey是脚本语言，可以改变键盘按键，创建键盘宏，玩游�
 
 列表界面
 
-
+![列表页](https://github.com/chf-gh/AutoHotKey/blob/master/1.jpg)
 
 新增页面（默认添加到`D://card`文件夹中）
-
+![列表页](https://github.com/chf-gh/AutoHotKey/blob/master/2.jpg)
