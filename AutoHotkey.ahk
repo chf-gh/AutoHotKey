@@ -1,4 +1,4 @@
-﻿
+
 #HotkeyModifierTimeout -1
 SetKeyDelay ,-1
 SetStoreCapslockMode, off
@@ -38,7 +38,8 @@ $p::`;
 	Gui, Add, ListView,AltSubmit r30   x0 y0 gMyListView vListView   SortDesc c222222 Grid ,  Name|create_date
 	Gui, Add, Text, w400 x+2 r1 , 内容:
 	Gui, Add, Edit, w700 y+2 r34 vItemContent , 未选择行
-	Gui, Add, Button, w100 x+-100 y+4 , Update    ; ButtonUpdate(如果存在)会在此按钮被按下时运行. 
+	Gui, Add, Button, w100 x+-100 y+4 , Update    ; ButtonUpdate(如果存在)会在此按钮被按下时运行.
+	Gui, Add, Button, w100 x+-600 y+-22 , Delete     
 	Gui, +Resize  ; 让用户可以调整窗口的大小. 
 	Gui, Font, s10 cBlack , Verdana  ; 如果需要, 使用这样的一行给窗口设置新的默认字体.
     GuiControl, Font, ItemContent  ; 让上面的字体设置对控件生效.
@@ -53,18 +54,18 @@ $p::`;
 	}
 	LV_ModifyCol( )  ; 根据内容自动调整每列的大小. 
 	LV_ModifyCol(1  ,"  Sort")  ; 
-	LV_ModifyCol(2  ,"  SortDesc","Date")  ; 为了进行排序, 指出列 2 是整数.
+	;LV_ModifyCol(2  ,"  SortDesc","Date")  ; 为了进行排序, 指出列 2 是整数. 去掉了时间排序
 	 ;选中行
 	LV_Modify(1, "Select")
 	LV_Modify(1, "Focus")
 
+	RowText=""
+	preNum = 0 ;切换标题前的标题行号
+	preText = "" ;切换标题前的标题 
 	; 显示窗口并返回. 每当用户点击一行时脚本会发出通知.
 	Gui, Show, ,所有卡片--%addr%
 	return
 	  
-	RowText=""
-	preNum = 0 ;切换标题前的标题行号
-	preText = "" ;切换标题前的标题 
 	GuiClose:
 	GuiEscape: 	 
 		preNum = 0 ;切换标题前的标题行号
@@ -123,7 +124,38 @@ $p::`;
 			MsgBox,0,,无内容   
 			return  
 		}		
-	return      			
+	return 
+	ButtonDelete:  
+		if("" != RowText){ 
+			MsgBox,292,,确定删除: %RowText% 这个卡片吗？    
+			IfMsgBox No
+				return 
+			; 删除列表中的行
+			Loop
+			{
+				RowNumber := LV_GetNext(RowNumber - 1)  ; 在前一次找到的位置后继续搜索.
+				if not RowNumber  ; 上面返回零, 所以选择的行已经都找到了.
+					break
+				LV_Delete(  RowNumber) 
+			}
+			; 删除文件
+			GuiControlGet, ItemContent  ; 获取编辑控件的内容. 
+			FileDelete, %addr%\%RowText% 	
+			
+			RowNumber := 0    ; 这样使得首次循环从列表的顶部开始搜索.
+			preNum = 0 ;切换标题前的标题行号
+			preText = "" ;切换标题前的标题 
+			RowText =  ;重置当前行内容
+			LV_Modify(1, "Select")
+			LV_Modify(1, "Focus")
+			ToolTip ,删除成功 
+			 
+			SetTimer, RemoveToolTip, 1000  
+		}else{
+			MsgBox,0,,请选择行   
+			return  
+		}		
+	return    			
 return	
 	
 ; 保存小卡片
