@@ -73,7 +73,7 @@ $p::`;
 		if("" != RowText){  
 			GuiControlGet, ItemContent  ; 获取编辑控件的内容. 
 			FileDelete, %addr%\%RowText% 			
-			FileAppend, %ItemContent%  `n,  %addr%\%RowText%   
+			FileAppend,%ItemContent%,  %addr%\%RowText%   
 			Gui, Submit, NoHide  ; 保存用户的输入到每个控件的关联变量中   
 		}
 		Gui Destroy  ; 销毁关于对话框.  
@@ -85,7 +85,7 @@ $p::`;
 				if("" != preText){  
 					GuiControlGet, ItemContent  ; 获取编辑控件的内容. 
 					FileDelete, %addr%\%preText% 			
-					FileAppend, %ItemContent%  `n,  %addr%\%preText%   
+					FileAppend,%ItemContent%,  %addr%\%preText%   
 					Gui, Submit, NoHide  ; 保存用户的输入到每个控件的关联变量中   
 					  
 				}else{
@@ -98,6 +98,7 @@ $p::`;
 			LV_GetText(RowText, FocusedRowNumber, 1) ; 获取首个字段的文本.
 			FileRead, FileContents, %addr%\%RowText%
 			GuiControl,, ItemContent, %FileContents%  
+			GuiControl,Focus,ItemContent
 			preNum = %FocusedRowNumber%;  
 			 
 	return 
